@@ -1,0 +1,116 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class StreamCl {
+
+	
+	public static void main(String[] args) {
+		
+		Stream<Integer> stream = Stream.of(1,2,3,4,5,6,7,8,9);
+		//stream.forEach(p->System.out.println(p));
+		
+		List<String> al = new ArrayList<String>();
+		al.add("a");
+		al.add("b");
+		al.add("c");
+		al.add("d");
+		al.add("e");
+		al.add("f");
+		Stream<String> stream1 = al.stream();
+		//stream.forEach(p->System.out.println(p));
+		
+		List<Integer> ageList = new ArrayList<Integer>();
+		ageList.add(2);
+		ageList.add(15);
+		ageList.add(56);
+		ageList.add(25);
+		ageList.add(65);
+		ageList.add(32);
+		ageList.add(13);
+		
+//		ageList.stream().filter(num->num>18).forEach(System.out::println);
+//		System.out.println("");
+//		ageList.stream().forEach(System.out::println);
+		
+		List<Person> personList = new ArrayList<Person>();
+		personList.add(new Person("Manasvi", 27));
+		personList.add(new Person("Raja", 28));
+		personList.add(new Person("Vibhore", 26));
+		personList.add(new Person("Nimish", 36));
+		
+//		personList.stream().filter(p->p.getAge()<30 && p.getAge()>26).forEach(System.out::println);
+//		
+//		personList.stream().map(p->p.getName().toUpperCase()).forEach(System.out::println);
+//		
+//		//personList.stream().forEach(p->System.out.println(p));
+//		
+//		personList.stream().mapToInt(p->p.getName().length()).forEach(System.out::println);
+//		
+		
+		
+		List<List<String>> iHeardYouLikedLists = new ArrayList<List<String>>();
+		iHeardYouLikedLists.add(Arrays.asList("By","Sigmar","No"));
+		iHeardYouLikedLists.add(Arrays.asList("Beyond","your","comprehension"));
+		iHeardYouLikedLists.add(Arrays.asList("Parched","in","desert heat"));
+		iHeardYouLikedLists.add(Arrays.asList("Kislev","Kislev","Kislev"));
+		
+//		Stream<List<String>> stream_1 = iHeardYouLikedLists.stream();
+//		Stream<String> stream_2 = stream_1.flatMap(s->s.stream()); 
+//		Stream stream_3 = stream_2.filter(x->x.contains("By"));
+//		stream_3.forEach(System.out::println);
+		
+		//iHeardYouLikedLists.stream().flatMap(x->x.stream()).filter(x->"Kislev".equalsIgnoreCase(x)).forEach(System.out::println);
+		
+		
+		List<Employee> empList = new ArrayList<Employee>();
+		empList.add(new Employee("Mazdamundi", 100000,"Dummy Thicc"));
+		empList.add(new Employee("Boring Von Carstein", 100,"Meh"));
+		empList.add(new Employee("Thorgrim Grudgebearer", 200000,"Meh"));
+		empList.add(new Employee("Tretch Craventail", 200,"Meh"));
+		empList.add(new Employee("Greasus Goldtooth", 300000,"Dummy Thicc"));
+		empList.add(new Employee("Balthazar Gelt", 900000,"Meh"));
+		empList.add(new Employee("Any Beastmen guy", 1,"Buff"));
+		//empList.add(new Employee("Any Beastmen guy", 1));
+		
+		Optional<Integer> totalSalary= empList.stream().map(e->e.getSalary()).reduce((p,q)->p+q);
+		
+		//System.out.println("Total Salary "+totalSalary.get());
+		
+		List<String> empName =  empList.stream().map(em->em.getName()).collect(Collectors.toList());
+		
+		//System.out.println(empName);
+		//
+		Map<String, Integer> charLenMap = empList.stream().map(em->em.getName()).collect(Collectors.toMap(s->s, s->s.length(),(s,t)->s));
+		
+		//System.out.println(charLenMap);
+		
+		List<String> empNames = empList.stream().filter(p->p.getSalary()>90000).sorted(Comparator.comparing(Employee::getName)).map(p->p.getName()).collect(Collectors.toList());
+		
+		//System.out.println(empNames);
+		
+		Map<String,List<Employee>> thicnessList = empList.stream().collect(Collectors.groupingBy(Employee::getThiccness));
+		
+		//System.out.println(thicnessList);
+		
+		Map<String,Integer> salaryAgainstThicness = empList.stream().collect(Collectors.groupingBy(Employee::getThiccness,Collectors.summingInt(Employee::getSalary)));
+		
+		//System.out.println(salaryAgainstThicness);
+		
+		Map<String,Optional<Employee>> maxSalThicc = empList.stream().collect(Collectors.groupingBy(Employee::getThiccness,Collectors.maxBy(Comparator.comparing(Employee::getSalary))));
+		
+		//System.out.println(maxSalThicc);
+		
+		Map<Boolean, List<Employee>> empIsThicc =  empList.stream().collect(Collectors.partitioningBy(e->"Dummy Thicc".equals(e.getThiccness())));
+		
+		System.out.println(empIsThicc);
+		
+		
+		
+	}
+}
